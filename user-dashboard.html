@@ -1,0 +1,732 @@
+<!-- START OF USER DASHBOARD EMBED CODE -->
+
+<style>
+/* --- DASHBOARD THEME VARIABLES --- */
+:root {
+    --tier1-color: #00BFFF; /* Electric Blue */
+    --tier2-color: #FF1493; /* Neon Seduction */
+    --tier3-color: #00FFFF; /* Neon Oracle */
+    --tier4-color: #FF69B4; /* Neon Muse */
+    --background-color: #121212;
+    --surface-color: #000000;
+    --text-color-primary: #FFFFFF;
+    --text-color-secondary: #B3B3B3;
+    --success-color: #00FF00;
+    --warning-color: #FFA500;
+    --error-color: #FF4444;
+}
+
+/* Dashboard Container */
+#user-dashboard-container {
+    background: linear-gradient(135deg, var(--surface-color) 0%, rgba(18, 18, 18, 0.95) 100%);
+    color: var(--text-color-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 20px;
+    padding: 24px;
+    margin: 20px auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Loading State */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    border-radius: 20px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--text-color-secondary);
+    border-top: 3px solid var(--tier1-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Header Section */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--text-color-secondary);
+}
+
+.user-info h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    background: linear-gradient(45deg, var(--text-color-primary), var(--tier1-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.user-info .user-email {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.tier-badge {
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.tier-badge.tier-1 {
+    background: linear-gradient(135deg, var(--tier1-color), rgba(0, 191, 255, 0.8));
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+}
+
+.tier-badge.tier-2 {
+    background: linear-gradient(135deg, var(--tier2-color), rgba(255, 20, 147, 0.8));
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+}
+
+.tier-badge.tier-3 {
+    background: linear-gradient(135deg, var(--tier3-color), rgba(0, 255, 255, 0.8));
+    color: black;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.tier-badge.tier-4 {
+    background: linear-gradient(135deg, var(--tier4-color), #FFD700);
+    color: black;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: var(--success-color);
+}
+
+.stat-card.warning h3 {
+    color: var(--warning-color);
+}
+
+.stat-card.error h3 {
+    color: var(--error-color);
+}
+
+.stat-card p {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, var(--tier1-color), rgba(0, 191, 255, 0.8));
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    color: var(--text-color-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn.secondary:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Current Playlist Preview */
+.playlist-preview {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.playlist-preview h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: var(--text-color-primary);
+}
+
+.playlist-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-color-secondary);
+    font-style: italic;
+}
+
+.playlist-tracks {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.track-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.track-item:last-child {
+    border-bottom: none;
+}
+
+.track-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: var(--text-color-primary);
+}
+
+.track-info p {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+}
+
+.remove-track-btn {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.remove-track-btn:hover {
+    background: #ff6666;
+}
+
+/* Next Reset Info */
+.reset-info {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(0, 191, 255, 0.05));
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+}
+
+.reset-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--tier1-color);
+}
+
+.reset-info p {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #user-dashboard-container {
+        padding: 16px;
+        margin: 10px;
+        max-width: none;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+    
+    .user-info h1 {
+        font-size: 1.6rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        justify-content: center;
+    }
+}
+
+/* Error States */
+.error-message {
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), rgba(255, 68, 68, 0.05));
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    color: var(--error-color);
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+
+<!-- DASHBOARD HTML STRUCTURE -->
+<div id="user-dashboard-container">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Error Message -->
+    <div class="error-message hidden" id="errorMessage">
+        Failed to load dashboard. Please refresh the page or contact support.
+    </div>
+    
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="user-info">
+            <h1 id="welcomeMessage">Welcome back!</h1>
+            <p class="user-email" id="userEmail">Loading...</p>
+        </div>
+        <div class="tier-badge" id="tierBadge">
+            Loading...
+        </div>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 id="currentTracks">-</h3>
+            <p>Songs in Your Playlist</p>
+        </div>
+        <div class="stat-card" id="remainingCard">
+            <h3 id="remainingTracks">-</h3>
+            <p>Songs Remaining This Month</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="totalAllowed">-</h3>
+            <p>Total Songs Allowed</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="nextResetDate">-</h3>
+            <p>Days Until Reset</p>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn" id="browseMusicBtn">
+            🎵 Browse Music Library
+        </button>
+        <button class="action-btn secondary" id="refreshDashboardBtn">
+            🔄 Refresh Dashboard
+        </button>
+    </div>
+    
+    <!-- Current Playlist Preview -->
+    <div class="playlist-preview">
+        <h2>Your Current Playlist</h2>
+        <div class="playlist-empty hidden" id="playlistEmpty">
+            <p>Your playlist is empty. Browse the music library to add some tracks!</p>
+        </div>
+        <div class="playlist-tracks" id="playlistTracks">
+            <!-- Playlist tracks will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Next Reset Info -->
+    <div class="reset-info">
+        <h3>Next Monthly Reset</h3>
+        <p id="resetInfoText">Loading reset information...</p>
+    </div>
+</div>
+
+<!-- DASHBOARD JAVASCRIPT -->
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Configuration
+    const TIER_CONFIG = {
+        1: {
+            name: 'Electric Blue',
+            color: '#00BFFF',
+            initialTracks: 10,
+            monthlyTracks: 5,
+            className: 'tier-1'
+        },
+        2: {
+            name: 'Neon Seduction',
+            color: '#FF1493',
+            initialTracks: 20,
+            monthlyTracks: 10,
+            className: 'tier-2'
+        },
+        3: {
+            name: 'Neon Oracle',
+            color: '#00FFFF',
+            initialTracks: 30,
+            monthlyTracks: 15,
+            className: 'tier-3'
+        },
+        4: {
+            name: 'Neon Muse',
+            color: '#FF69B4',
+            initialTracks: -1, // Unlimited
+            monthlyTracks: -1,
+            className: 'tier-4'
+        }
+    };
+
+    // DOM Elements
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const errorMessage = document.getElementById('errorMessage');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userEmail = document.getElementById('userEmail');
+    const tierBadge = document.getElementById('tierBadge');
+    const currentTracks = document.getElementById('currentTracks');
+    const remainingTracks = document.getElementById('remainingTracks');
+    const remainingCard = document.getElementById('remainingCard');
+    const totalAllowed = document.getElementById('totalAllowed');
+    const nextResetDate = document.getElementById('nextResetDate');
+    const browseMusicBtn = document.getElementById('browseMusicBtn');
+    const refreshDashboardBtn = document.getElementById('refreshDashboardBtn');
+    const playlistEmpty = document.getElementById('playlistEmpty');
+    const playlistTracks = document.getElementById('playlistTracks');
+    const resetInfoText = document.getElementById('resetInfoText');
+
+    // State
+    let currentUser = null;
+    let userPlaylist = [];
+    let userTierStatus = null;
+
+    // API Base URL
+    function getApiBaseUrl() {
+        // Update this to your Azure backend URL
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000';
+        }
+        return 'https://your-azure-backend.azurewebsites.net'; // Replace with your Azure URL
+    }
+
+    // Get current user from Memberstack
+    async function getCurrentUser() {
+        try {
+            if (typeof window.$memberstackDom === 'undefined') {
+                throw new Error('Memberstack not loaded');
+            }
+            
+            const member = await window.$memberstackDom.getCurrentMember();
+            if (!member) {
+                throw new Error('No user logged in');
+            }
+            
+            return {
+                id: member.id,
+                email: member.email,
+                tier: getTierFromMemberstack(member),
+                planConnections: member.planConnections
+            };
+        } catch (error) {
+            console.error('Error getting current user:', error);
+            throw error;
+        }
+    }
+
+    // Extract tier information from Memberstack data
+    function getTierFromMemberstack(member) {
+        // This depends on how the client has structured their plans
+        // Common patterns:
+        if (member.planConnections && member.planConnections.length > 0) {
+            const planId = member.planConnections[0].planId;
+            
+            // Map plan IDs to tiers (you'll need to update these based on their actual plan IDs)
+            const planMapping = {
+                'electric-blue': 1,
+                'neon-seduction': 2,
+                'neon-oracle': 3,
+                'neon-muse': 4
+            };
+            
+            return planMapping[planId] || 1; // Default to tier 1
+        }
+        
+        // Alternative: Check custom fields
+        if (member.customFields && member.customFields.tier) {
+            return parseInt(member.customFields.tier);
+        }
+        
+        return 1; // Default tier
+    }
+
+    // Fetch user playlist from backend
+    async function fetchUserPlaylist(userId) {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/user-playlist/${userId}`);
+            if (!response.ok) throw new Error('Failed to fetch playlist');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching playlist:', error);
+            return [];
+        }
+    }
+
+    // Fetch user tier status from backend
+    async function fetchUserTierStatus(userId, tierLevel) {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/user-tier-status/${userId}`);
+            if (!response.ok) {
+                // Create initial status if doesn't exist
+                return await createInitialTierStatus(userId, tierLevel);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching tier status:', error);
+            return null;
+        }
+    }
+
+    // Create initial tier status for new users
+    async function createInitialTierStatus(userId, tierLevel) {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/user-tier-status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId,
+                    tierLevel,
+                    currentMonth: new Date().toISOString().slice(0, 7)
+                })
+            });
+            
+            if (!response.ok) throw new Error('Failed to create tier status');
+            return await response.json();
+        } catch (error) {
+            console.error('Error creating tier status:', error);
+            return null;
+        }
+    }
+
+    // Remove track from playlist
+    async function removeTrack(songId) {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/user-playlist/${currentUser.id}/${songId}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) throw new Error('Failed to remove track');
+            
+            // Refresh dashboard
+            await loadDashboard();
+        } catch (error) {
+            console.error('Error removing track:', error);
+            alert('Failed to remove track. Please try again.');
+        }
+    }
+
+    // Update dashboard UI
+    function updateDashboardUI() {
+        if (!currentUser || !userTierStatus) return;
+
+        const tierConfig = TIER_CONFIG[currentUser.tier];
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        
+        // Update header
+        welcomeMessage.textContent = `Welcome back!`;
+        userEmail.textContent = currentUser.email;
+        
+        // Update tier badge
+        tierBadge.textContent = `Tier ${currentUser.tier}: ${tierConfig.name}`;
+        tierBadge.className = `tier-badge ${tierConfig.className}`;
+        
+        // Update stats
+        currentTracks.textContent = userPlaylist.length;
+        
+        if (tierConfig.initialTracks === -1) {
+            // Unlimited tier
+            remainingTracks.textContent = '∞';
+            totalAllowed.textContent = '∞';
+            remainingCard.classList.remove('warning', 'error');
+        } else {
+            const maxTracks = tierConfig.initialTracks + (tierConfig.monthlyTracks * getMonthsSinceSignup());
+            const remaining = maxTracks - userPlaylist.length;
+            
+            remainingTracks.textContent = Math.max(0, remaining);
+            totalAllowed.textContent = maxTracks;
+            
+            // Update card styling based on remaining tracks
+            remainingCard.classList.remove('warning', 'error');
+            if (remaining <= 0) {
+                remainingCard.classList.add('error');
+            } else if (remaining <= 3) {
+                remainingCard.classList.add('warning');
+            }
+        }
+        
+        // Update reset date
+        const nextReset = getNextResetDate();
+        const daysUntilReset = Math.ceil((nextReset - new Date()) / (1000 * 60 * 60 * 24));
+        nextResetDate.textContent = daysUntilReset;
+        
+        // Update reset info
+        resetInfoText.textContent = `Your monthly track allowance will refresh on ${nextReset.toLocaleDateString()}. You'll get ${tierConfig.monthlyTracks === -1 ? 'unlimited' : tierConfig.monthlyTracks} new track${tierConfig.monthlyTracks !== 1 ? 's' : ''} to add to your playlist.`;
+        
+        // Update playlist preview
+        if (userPlaylist.length === 0) {
+            playlistEmpty.classList.remove('hidden');
+            playlistTracks.innerHTML = '';
+        } else {
+            playlistEmpty.classList.add('hidden');
+            renderPlaylistTracks();
+        }
+    }
+
+    // Render playlist tracks
+    function renderPlaylistTracks() {
+        playlistTracks.innerHTML = userPlaylist.map(track => `
+            <div class="track-item">
+                <div class="track-info">
+                    <h4>${track.title}</h4>
+                    <p>${track.artist}</p>
+                </div>
+                <button class="remove-track-btn" onclick="removeTrack(${track.id})" title="Remove track">
+                    ×
+                </button>
+            </div>
+        `).join('');
+    }
+
+    // Calculate months since user signup
+    function getMonthsSinceSignup() {
+        // This would need to be calculated based on user signup date
+        // For now, return 0 (initial signup)
+        return 0;
+    }
+
+    // Get next reset date (first day of next month)
+    function getNextResetDate() {
+        const now = new Date();
+        const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        return nextMonth;
+    }
+
+    // Main dashboard loading function
+    async function loadDashboard() {
+        try {
+            loadingOverlay.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            
+            // Get current user
+            currentUser = await getCurrentUser();
+            
+            // Fetch user data
+            const [playlist, tierStatus] = await Promise.all([
+                fetchUserPlaylist(currentUser.id),
+                fetchUserTierStatus(currentUser.id, currentUser.tier)
+            ]);
+            
+            userPlaylist = playlist;
+            userTierStatus = tierStatus;
+            
+            // Update UI
+            updateDashboardUI();
+            
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            errorMessage.classList.remove('hidden');
+        } finally {
+            loadingOverlay.classList.add('hidden');
+        }
+    }
+
+    // Event Listeners
+    browseMusicBtn.addEventListener('click', () => {
+        // This would open the music library embed
+        // You can implement this as a modal, new page, or inline section
+        console.log('Open music library');
+        // Example: window.open('music-library.html', '_blank');
+    });
+
+    refreshDashboardBtn.addEventListener('click', loadDashboard);
+
+    // Make removeTrack function globally available
+    window.removeTrack = removeTrack;
+
+    // Initialize dashboard
+    await loadDashboard();
+});
+</script>
+
+<!-- END OF USER DASHBOARD EMBED CODE -->

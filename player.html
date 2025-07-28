@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Audio Player</title>
+
+    <!-- Plyr.js CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- This is the container for our entire custom player -->
+    <div id="custom-player-container">
+
+        <!-- The original audio element, which we will hide -->
+        <audio id="audioPlayer" preload="metadata">
+             <source src="YOUR_MP3_URL_HERE" type="audio/mp3" />
+        </audio>
+
+        <!-- Top section: Album Art -->
+        <div class="album-art-container">
+            <img id="albumArt" src="https://via.placeholder.com/500" alt="Album Art">
+        </div>
+
+        <!-- NEW WRAPPER DIV -->
+        <div class="player-main-content">
+            <!-- Middle section: Track Info & Progress -->
+            <div class="track-info-container">
+                <div class="track-details">
+                    <h2 id="trackTitle">Vinaro Bhagyamu</h2>
+                    <p id="trackArtist">a Keerthana, S. P. Balasubrahmanyam, Srile...</p>
+                </div>
+                <div class="plus-icon">
+                    <button id="addToPlaylistBtn">+</button>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <input id="progressBar" type="range" value="0" step="0.01" class="seek-slider">
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalDuration">0:00</span>
+                </div>
+            </div>
+
+            <!-- Bottom section: Player Controls -->
+            <div class="controls-container">
+                <button id="shuffleBtn" class="control-btn shuffle-btn">
+                    <!-- SVG for shuffle icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="16 16 21 16 21 21"></polyline><line x1="4" y1="4" x2="11" y2="11"></line></svg>
+                </button>
+                <button id="prevBtn" class="control-btn">
+                    <!-- SVG for previous icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"></path></svg>
+                </button>
+                <button id="playPauseBtn" class="control-btn play-pause-btn">
+                    <!-- SVG for play icon -->
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+                </button>
+                <button id="nextBtn" class="control-btn">
+                    <!-- SVG for next icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
+                </button>
+                <button id="repeatBtn" class="control-btn repeat-btn">
+                    <!-- SVG for repeat icon -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                </button>
+            </div>
+
+            <!-- Download Links section -->
+            <div class="download-container">
+                <a id="downloadMp3Btn" href="#" download class="download-link">Download MP3</a>
+                <a id="downloadWavBtn" href="#" download class="download-link">Download WAV</a>
+            </div>
+        </div> <!-- END NEW WRAPPER DIV -->
+
+    </div> <!-- end #custom-player-container -->
+
+    <!-- Scripts remain the same -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
