@@ -474,11 +474,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // API Base URL
     function getApiBaseUrl() {
-        // Update this to your Azure backend URL
+        // Local development
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3000';
         }
-        return 'https://your-azure-backend.azurewebsites.net'; // Replace with your Azure URL
+        // Production Azure backend
+        return 'https://music-player-hadbg3c8cwazh4gm.canadacentral-01.azurewebsites.net';
     }
 
     // Get current user from Memberstack

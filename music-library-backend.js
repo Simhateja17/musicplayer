@@ -7,7 +7,16 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'https://music-player-hadbg3c8cwazh4gm.canadacentral-01.azurewebsites.net'
+    ],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Database connection (Neon DB)
