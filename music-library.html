@@ -689,15 +689,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (member.planConnections && member.planConnections.length > 0) {
             const planId = member.planConnections[0].planId;
             
-            // Map plan IDs to tiers (update these based on their actual plan IDs)
+            // Actual Plan IDs from client's Memberstack dashboard
             const planMapping = {
-                'electric-blue': 1,
-                'neon-seduction': 2,
-                'neon-oracle': 3,
-                'neon-muse': 4
+                'pln_tier-1-cq5u0dlz': 1,              // Electric Blue
+                'pln_tier-2-hn4j0op9': 2,              // Neon Seduction  
+                'pln_tier-3-kx5v0dyk': 3,              // Neon Oracle
+                'pln_tier-4-neon-muse-hg1he0sox': 4   // Neon Muse
             };
             
-            return planMapping[planId] || 1;
+            return planMapping[planId] || 1; // Default to tier 1 if not found
         }
         
         if (member.customFields && member.customFields.tier) {
