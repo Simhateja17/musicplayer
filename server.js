@@ -105,12 +105,160 @@ app.post('/api/songs', async (req, res) => {
   }
 });
 
+// API endpoint to get user's playlist
+app.get('/api/user-playlist/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const result = await pool.query(`
+      SELECT s.id, s.title, s.artist, s.streaming_url, s.download_url, 
+             s.artwork_url, s.wav_url, up.added_at
+      FROM user_playlists up
+      JOIN songs s ON up.song_id = s.id
+      WHERE up.user_id = $1
+      ORDER BY up.added_at DESC
+    `, [userId]);
+    
+    const playlist = result.rows.map(row => ({
+      id: row.id,
+      title: row.title,
+      artist: row.artist,
+      streamingUrl: row.streaming_url,
+      downloadUrl: row.download_url || row.streaming_url,
+      artworkUrl: row.artwork_url || 'https://via.placeholder.com/500',
+      wavUrl: row.wav_url,
+      addedAt: row.added_at
+    }));
+
+    res.json(playlist);
+  } catch (error) {
+    console.error('Error fetching user playlist:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// API endpoint to add songs to user playlist (bulk)
+app.post('/api/user-playlist/bulk', async (req, res) => {
+  try {
+    const { userId, songIds, tierLevel } = req.body;
+    
+    if (!userId || !songIds || !Array.isArray(songIds)) {
+      return res.status(400).json({ error: 'Invalid request data' });
+    }
+
+    // Check current playlist count
+    const countResult = await pool.query(
+      'SELECT COUNT(*) as count FROM user_playlists WHERE user_id = $1',
+      [userId]
+    );
+    
+    const currentCount = parseInt(countResult.rows[0].count);
+    
+    // Define tier limits
+    const tierLimits = {
+      1: 15, // 10 initial + 5 monthly (simplified)
+      2: 30, // 20 initial + 10 monthly
+      3: 45, // 30 initial + 15 monthly
+      4: -1  // Unlimited
+    };
+    
+    const maxTracks = tierLimits[tierLevel] || tierLimits[1];
+    
+    if (maxTracks !== -1 && (currentCount + songIds.length) > maxTracks) {
+      return res.status(400).json({ 
+        error: `Adding these songs would exceed your tier limit of ${maxTracks} tracks` 
+      });
+    }
+
+    // Add songs to playlist
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      
+      for (const songId of songIds) {
+        await client.query(
+          'INSERT INTO user_playlists (user_id, song_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+          [userId, songId]
+        );
+      }
+      
+      await client.query('COMMIT');
+      res.json({ success: true, message: `Added ${songIds.length} songs to playlist` });
+      
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+    
+  } catch (error) {
+    console.error('Error adding songs to playlist:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// API endpoint to get user dashboard data
+app.get('/api/user-dashboard/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Get playlist count
+    const playlistResult = await pool.query(
+      'SELECT COUNT(*) as count FROM user_playlists WHERE user_id = $1',
+      [userId]
+    );
+    
+    // Get recent activity (last 5 added songs)
+    const recentResult = await pool.query(`
+      SELECT s.title, s.artist, up.added_at
+      FROM user_playlists up
+      JOIN songs s ON up.song_id = s.id
+      WHERE up.user_id = $1
+      ORDER BY up.added_at DESC
+      LIMIT 5
+    `, [userId]);
+    
+    const dashboardData = {
+      playlistCount: parseInt(playlistResult.rows[0].count),
+      recentActivity: recentResult.rows.map(row => ({
+        title: row.title,
+        artist: row.artist,
+        addedAt: row.added_at
+      }))
+    };
+
+    res.json(dashboardData);
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Serve the webflow embed page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/webflow-embed.html');
 });
 
+// Serve the music library
+app.get('/library', (req, res) => {
+  res.sendFile(__dirname + '/music-library.html');
+});
+
+// Serve the user dashboard
+app.get('/dashboard', (req, res) => {
+  res.sendFile(__dirname + '/user-dashboard.html');
+});
+
+// Serve the webflow integration guide
+app.get('/webflow-guide', (req, res) => {
+  res.sendFile(__dirname + '/webflow-integration-guide.html');
+});
+
 app.listen(port, () => {
   console.log(`Music player server running on port ${port}`);
   console.log(`Visit http://localhost:${port} to see the music player`);
+  console.log(`Visit http://localhost:${port}/library for the music library`);
+  console.log(`Visit http://localhost:${port}/dashboard for the user dashboard`);
+  console.log(`Visit http://localhost:${port}/webflow-guide for integration guide`);
 });

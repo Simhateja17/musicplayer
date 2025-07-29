@@ -422,57 +422,74 @@
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 return `${window.location.protocol}//${window.location.host}`;
             }
-            return 'https://your-deployed-api-url.com';
+            return 'https://music-player-hadbg3c8cwazh4gm.canadacentral-01.azurewebsites.net';
         }
 
         // Fetch songs from database with tier filtering
+        // Fetch user's selected songs from their personal playlist
         async function loadPlaylist() {
             try {
+                // Get current user from Memberstack first
+                if (typeof window.$memberstackDom === 'undefined') {
+                    throw new Error('Memberstack not loaded');
+                }
+                
+                const member = await window.$memberstackDom.getCurrentMember();
+                if (!member) {
+                    console.warn('No user logged in - showing empty playlist');
+                    playlist = [];
+                    showEmptyPlaylistMessage();
+                    return;
+                }
+                
+                // Fetch user's personal playlist from backend
                 const apiBaseUrl = getApiBaseUrl();
-                const response = await fetch(`${apiBaseUrl}/api/songs?tier=${TIER_CONFIG.tier}&limit=${TIER_CONFIG.maxTracks}`);
+                const response = await fetch(`${apiBaseUrl}/api/user-playlist/${member.id}`);
                 
                 if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log('User has no playlist yet');
+                        playlist = [];
+                        showEmptyPlaylistMessage();
+                        return;
+                    }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                const songs = await response.json();
-                playlist = songs.slice(0, TIER_CONFIG.maxTracks); // Enforce tier limit
+                const userPlaylist = await response.json();
+                playlist = userPlaylist;
                 
-                console.log(`Loaded ${playlist.length} tracks for ${TIER_CONFIG.name} tier`);
+                console.log(`Loaded ${playlist.length} tracks from user's personal playlist`);
                 
                 if (playlist.length > 0) {
                     loadTrack(0);
                 } else {
-                    console.warn('No songs found in database for this tier');
+                    showEmptyPlaylistMessage();
                 }
                 
             } catch (error) {
-                console.error('Error loading playlist from database:', error);
-                
-                // Fallback playlist limited to tier allowance
-                playlist = [
-                    {
-                        "title": "Ain't Got No Time",
-                        "artist": "Digitized Sensation",
-                        "streamingUrl": "https://ds-stream.b-cdn.net/ds-vol1/aintgottime.wav",
-                        "downloadUrl": "https://ds-stream.b-cdn.net/ds-vol1/aintgottime.mp3",
-                        "artworkUrl": "https://via.placeholder.com/500?text=Ain't+Got+No+Time",
-                        "wavUrl": "https://ds-stream.b-cdn.net/ds-vol1/aintgottime.wav"
-                    },
-                    {
-                        "title": "All the Way Real",
-                        "artist": "Digitized Sensation",
-                        "streamingUrl": "https://ds-stream.b-cdn.net/ds-vol1/allthewayreal.wav",
-                        "downloadUrl": "https://ds-stream.b-cdn.net/ds-vol1/allthewayreal.mp3",
-                        "artworkUrl": "https://via.placeholder.com/500?text=All+the+Way+Real",
-                        "wavUrl": "https://ds-stream.b-cdn.net/ds-vol1/allthewayreal.wav"
-                    }
-                ].slice(0, TIER_CONFIG.maxTracks);
-                
-                console.log(`Using fallback playlist with ${playlist.length} tracks for ${TIER_CONFIG.name} tier`);
-                if (playlist.length > 0) {
-                    loadTrack(0);
-                }
+                console.error('Error loading user playlist:', error);
+                playlist = [];
+                showEmptyPlaylistMessage();
+            }
+        }
+        
+        // Show message when user has no songs selected
+        function showEmptyPlaylistMessage() {
+            // Update the track info to show guidance
+            const trackTitleEl = document.getElementById('trackTitle');
+            const trackArtistEl = document.getElementById('trackArtist');
+            
+            if (trackTitleEl && trackArtistEl) {
+                trackTitleEl.textContent = 'No Songs Selected';
+                trackArtistEl.textContent = 'Visit the Music Library to add songs to your playlist';
+            }
+            
+            // Disable controls
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            if (playPauseBtn) {
+                playPauseBtn.disabled = true;
+                playPauseBtn.style.opacity = '0.5';
             }
         }
 

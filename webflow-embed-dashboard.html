@@ -1,0 +1,602 @@
+<!-- WEBFLOW EMBEDDABLE USER DASHBOARD -->
+<!-- Copy this entire code and paste into an HTML Embed element in Webflow -->
+
+<div id="user-dashboard-embed">
+    <style>
+    /* Scoped styles for dashboard embed */
+    #user-dashboard-embed {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    #user-dashboard-embed * {
+        box-sizing: border-box;
+    }
+    
+    /* Dashboard Container */
+    .dashboard-container {
+        background: linear-gradient(135deg, #000000 0%, rgba(18, 18, 18, 0.95) 100%);
+        color: #FFFFFF;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        position: relative;
+        min-height: 400px;
+    }
+    
+    /* Loading State */
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        border-radius: 20px;
+    }
+    
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #B3B3B3;
+        border-top: 3px solid #00BFFF;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #333;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        background: linear-gradient(45deg, #FFFFFF, #00BFFF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .welcome-subtitle {
+        color: #B3B3B3;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    
+    .user-tier {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    
+    .tier-badge {
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .tier-badge.tier-1 {
+        background: linear-gradient(135deg, #00BFFF, rgba(0, 191, 255, 0.8));
+        color: white;
+    }
+    
+    .tier-badge.tier-2 {
+        background: linear-gradient(135deg, #FF1493, rgba(255, 20, 147, 0.8));
+        color: white;
+    }
+    
+    .tier-badge.tier-3 {
+        background: linear-gradient(135deg, #00FFFF, rgba(0, 255, 255, 0.8));
+        color: black;
+    }
+    
+    .tier-badge.tier-4 {
+        background: linear-gradient(135deg, #FF69B4, #FFD700);
+        color: black;
+    }
+    
+    .tracks-status {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        text-align: center;
+        min-width: 120px;
+    }
+    
+    .tracks-status.warning {
+        border-color: #FFA500;
+        background: rgba(255, 165, 0, 0.1);
+    }
+    
+    .tracks-status.error {
+        border-color: #FF4444;
+        background: rgba(255, 68, 68, 0.1);
+    }
+    
+    .tracks-count {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 0;
+        color: #00FF00;
+    }
+    
+    .tracks-status.warning .tracks-count {
+        color: #FFA500;
+    }
+    
+    .tracks-status.error .tracks-count {
+        color: #FF4444;
+    }
+    
+    .tracks-label {
+        font-size: 0.75rem;
+        color: #B3B3B3;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        color: #00BFFF;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #B3B3B3;
+        margin: 0;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .action-btn {
+        background: linear-gradient(135deg, #00BFFF, rgba(0, 191, 255, 0.8));
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3);
+    }
+    
+    .action-btn.secondary {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Recent Activity */
+    .recent-activity {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 24px;
+    }
+    
+    .recent-activity h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: #FFFFFF;
+    }
+    
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .activity-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-info {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        color: #FFFFFF;
+    }
+    
+    .activity-artist {
+        font-size: 0.85rem;
+        color: #B3B3B3;
+        margin: 0;
+    }
+    
+    .activity-date {
+        font-size: 0.8rem;
+        color: #666;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #B3B3B3;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.2rem;
+        margin: 0 0 8px 0;
+        color: #FFFFFF;
+    }
+    
+    .error-message {
+        background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), rgba(255, 68, 68, 0.05));
+        border: 1px solid rgba(255, 68, 68, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+        color: #FF4444;
+        text-align: center;
+    }
+    
+    .hidden {
+        display: none !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 16px;
+            border-radius: 12px;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .welcome-section h1 {
+            font-size: 1.6rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .action-btn {
+            width: 100%;
+            max-width: 280px;
+            justify-content: center;
+        }
+    }
+    </style>
+    
+    <!-- Dashboard HTML -->
+    <div class="dashboard-container">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="dashboardLoading">
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="error-message hidden" id="dashboardError">
+            Failed to load dashboard. Please refresh the page.
+        </div>
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="welcome-section">
+                <h1>Welcome Back!</h1>
+                <p class="welcome-subtitle">Your personal music control center</p>
+            </div>
+            <div class="user-tier">
+                <div class="tier-badge" id="userTierBadge">Loading...</div>
+                <div class="tracks-status" id="tracksStatus">
+                    <p class="tracks-count" id="remainingTracksCount">-</p>
+                    <p class="tracks-label">Remaining</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-value" id="totalPlaylistCount">-</p>
+                <p class="stat-label">Songs in Playlist</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-value" id="currentTierLevel">-</p>
+                <p class="stat-label">Current Tier</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-value" id="tracksThisMonth">-</p>
+                <p class="stat-label">Added This Month</p>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn" onclick="openMusicLibrary()">
+                🎵 Browse Music Library
+            </button>
+            <button class="action-btn secondary" onclick="openCurrentPlayer()">
+                ▶️ Open My Player
+            </button>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div class="activity-list" id="recentActivityList">
+                <div class="empty-state">
+                    <h3>No recent activity</h3>
+                    <p>Start adding songs to see your activity here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Configuration
+    const TIER_CONFIG = {
+        1: { name: 'Electric Blue', color: '#00BFFF', className: 'tier-1', initialTracks: 10, monthlyTracks: 5 },
+        2: { name: 'Neon Seduction', color: '#FF1493', className: 'tier-2', initialTracks: 20, monthlyTracks: 10 },
+        3: { name: 'Neon Oracle', color: '#00FFFF', className: 'tier-3', initialTracks: 30, monthlyTracks: 15 },
+        4: { name: 'Neon Muse', color: '#FF69B4', className: 'tier-4', initialTracks: -1, monthlyTracks: -1 }
+    };
+
+    // DOM Elements
+    const dashboardLoading = document.getElementById('dashboardLoading');
+    const dashboardError = document.getElementById('dashboardError');
+    const userTierBadge = document.getElementById('userTierBadge');
+    const tracksStatus = document.getElementById('tracksStatus');
+    const remainingTracksCount = document.getElementById('remainingTracksCount');
+    const totalPlaylistCount = document.getElementById('totalPlaylistCount');
+    const currentTierLevel = document.getElementById('currentTierLevel');
+    const tracksThisMonth = document.getElementById('tracksThisMonth');
+    const recentActivityList = document.getElementById('recentActivityList');
+
+    // State
+    let currentUser = null;
+
+    // API Base URL
+    function getApiBaseUrl() {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000';
+        }
+        return 'https://music-player-hadbg3c8cwazh4gm.canadacentral-01.azurewebsites.net';
+    }
+
+    // Get current user from Memberstack
+    async function getCurrentUser() {
+        try {
+            if (typeof window.$memberstackDom === 'undefined') {
+                throw new Error('Memberstack not loaded');
+            }
+            
+            const member = await window.$memberstackDom.getCurrentMember();
+            if (!member) {
+                throw new Error('No user logged in');
+            }
+            
+            return {
+                id: member.id,
+                email: member.email,
+                tier: getTierFromMemberstack(member),
+                planConnections: member.planConnections
+            };
+        } catch (error) {
+            console.error('Error getting current user:', error);
+            throw error;
+        }
+    }
+
+    // Extract tier from Memberstack
+    function getTierFromMemberstack(member) {
+        if (member.planConnections && member.planConnections.length > 0) {
+            const planId = member.planConnections[0].planId;
+            const planMapping = {
+                'pln_tier-1-cq5u0dlz': 1,
+                'pln_tier-2-hn4j0op9': 2,
+                'pln_tier-3-kx5v0dyk': 3,
+                'pln_tier-4-neon-muse-hg1he0sox': 4
+            };
+            return planMapping[planId] || 1;
+        }
+        return 1;
+    }
+
+    // Fetch dashboard data
+    async function fetchDashboardData(userId) {
+        try {
+            const response = await fetch(`${getApiBaseUrl()}/api/user-dashboard/${userId}`);
+            if (!response.ok) throw new Error('Failed to fetch dashboard data');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+            return { playlistCount: 0, recentActivity: [] };
+        }
+    }
+
+    // Calculate remaining tracks
+    function calculateRemainingTracks(currentCount, userTier) {
+        const tierConfig = TIER_CONFIG[userTier];
+        if (tierConfig.initialTracks === -1) return -1;
+        
+        const maxTracks = tierConfig.initialTracks + (tierConfig.monthlyTracks * 0); // Simplified
+        return Math.max(0, maxTracks - currentCount);
+    }
+
+    // Update UI
+    function updateDashboardUI(dashboardData) {
+        const tierConfig = TIER_CONFIG[currentUser.tier];
+        
+        // Update tier badge
+        userTierBadge.textContent = `Tier ${currentUser.tier}: ${tierConfig.name}`;
+        userTierBadge.className = `tier-badge ${tierConfig.className}`;
+        
+        // Update playlist count
+        totalPlaylistCount.textContent = dashboardData.playlistCount;
+        currentTierLevel.textContent = currentUser.tier;
+        tracksThisMonth.textContent = dashboardData.playlistCount; // Simplified
+        
+        // Update remaining tracks
+        const remaining = calculateRemainingTracks(dashboardData.playlistCount, currentUser.tier);
+        if (remaining === -1) {
+            remainingTracksCount.textContent = '∞';
+            tracksStatus.classList.remove('warning', 'error');
+        } else {
+            remainingTracksCount.textContent = remaining;
+            tracksStatus.classList.remove('warning', 'error');
+            if (remaining === 0) {
+                tracksStatus.classList.add('error');
+            } else if (remaining <= 3) {
+                tracksStatus.classList.add('warning');
+            }
+        }
+        
+        // Update recent activity
+        if (dashboardData.recentActivity && dashboardData.recentActivity.length > 0) {
+            recentActivityList.innerHTML = dashboardData.recentActivity.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <p class="activity-title">${activity.title}</p>
+                        <p class="activity-artist">${activity.artist}</p>
+                    </div>
+                    <div class="activity-date">${new Date(activity.addedAt).toLocaleDateString()}</div>
+                </div>
+            `).join('');
+        } else {
+            recentActivityList.innerHTML = `
+                <div class="empty-state">
+                    <h3>No recent activity</h3>
+                    <p>Start adding songs to see your activity here</p>
+                </div>
+            `;
+        }
+    }
+
+    // Navigation functions (called by buttons)
+    window.openMusicLibrary = function() {
+        // Scroll to music library if it exists on the same page
+        const libraryElement = document.getElementById('music-library-embed');
+        if (libraryElement) {
+            libraryElement.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            // Send message to parent page to handle navigation
+            window.postMessage({ type: 'NAVIGATE_TO_LIBRARY' }, '*');
+        }
+    };
+
+    window.openCurrentPlayer = function() {
+        if (!currentUser) return;
+        
+        // Send message to parent page to handle player navigation
+        window.postMessage({ 
+            type: 'NAVIGATE_TO_PLAYER', 
+            tier: currentUser.tier
+        }, '*');
+    };
+
+    // Initialize dashboard
+    async function initializeDashboard() {
+        try {
+            dashboardLoading.classList.remove('hidden');
+            dashboardError.classList.add('hidden');
+            
+            currentUser = await getCurrentUser();
+            const dashboardData = await fetchDashboardData(currentUser.id);
+            
+            updateDashboardUI(dashboardData);
+            
+        } catch (error) {
+            console.error('Error initializing dashboard:', error);
+            dashboardError.classList.remove('hidden');
+        } finally {
+            dashboardLoading.classList.add('hidden');
+        }
+    }
+
+    // Listen for messages from other embeds
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'REFRESH_DASHBOARD') {
+            initializeDashboard();
+        }
+    });
+
+    // Auto-initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    } else {
+        initializeDashboard();
+    }
+})();
+</script>

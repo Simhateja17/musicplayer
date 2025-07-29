@@ -1,0 +1,419 @@
+        <!-- WEBFLOW EMBED INTEGRATION GUIDE -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webflow Embed Integration Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #000, #1a1a1a);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .step-section {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            background: #00BFFF;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .code-block {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', monospace;
+            font-size: 13px;
+        }
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #333;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .component-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .component-card h4 {
+            color: #00BFFF;
+            margin-bottom: 10px;
+        }
+        .file-list {
+            background: #f8f9fa;
+            border-left: 4px solid #00BFFF;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .file-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .communication-flow {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 Webflow Embed Integration Guide</h1>
+        <p>Complete guide to embedding your music platform components in Webflow Designer</p>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">1</div>
+        <h2>Overview: What You're Building</h2>
+        <p>You have <strong>6 embeddable components</strong> that work together seamlessly:</p>
+        
+        <div class="component-grid">
+            <div class="component-card">
+                <h4>📊 User Dashboard</h4>
+                <p>Shows tier status, remaining tracks, recent activity</p>
+                <small>File: webflow-embed-dashboard.html</small>
+            </div>
+            <div class="component-card">
+                <h4>🎵 Music Library</h4>
+                <p>Browse, search, and select songs for playlist</p>
+                <small>File: webflow-embed-library.html</small>
+            </div>
+            <div class="component-card">
+                <h4>🎧 Tier 1 Player</h4>
+                <p>Electric Blue - Basic tier player</p>
+                <small>File: webflow-embed-tier1.html</small>
+            </div>
+            <div class="component-card">
+                <h4>🎧 Tier 2 Player</h4>
+                <p>Neon Seduction - Mid tier player</p>
+                <small>File: webflow-embed-tier2.html</small>
+            </div>
+            <div class="component-card">
+                <h4>🎧 Tier 3 Player</h4>
+                <p>Neon Oracle - High tier player</p>
+                <small>File: webflow-embed-tier3.html</small>
+            </div>
+            <div class="component-card">
+                <h4>🎧 Tier 4 Player</h4>
+                <p>Neon Muse - Premium unlimited player</p>
+                <small>File: webflow-embed-tier4.html</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">2</div>
+        <h2>Step-by-Step Webflow Integration</h2>
+        
+        <h3>2.1 In Webflow Designer:</h3>
+        <ol>
+            <li><strong>Open your Webflow project</strong></li>
+            <li><strong>Navigate to the page</strong> where you want to add a component</li>
+            <li><strong>Drag an "HTML Embed" element</strong> from the Add Panel</li>
+            <li><strong>Double-click the HTML Embed element</strong> to open the code editor</li>
+            <li><strong>Copy and paste</strong> the entire content of one of your embed files</li>
+            <li><strong>Click "Save & Close"</strong></li>
+            <li><strong>Publish your site</strong> to see it in action</li>
+        </ol>
+
+        <div class="warning">
+            <strong>⚠️ Important:</strong> Copy the ENTIRE file content, including all CSS and JavaScript. These components are fully self-contained.
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">3</div>
+        <h2>Recommended Page Structure</h2>
+        
+        <h3>3.1 Main Dashboard Page</h3>
+        <div class="file-list">
+            <strong>Components to embed:</strong>
+            <ul>
+                <li>✅ User Dashboard (webflow-embed-dashboard.html)</li>
+                <li>✅ Music Library (webflow-embed-library.html)</li>
+            </ul>
+        </div>
+        <p><strong>Why together?</strong> The dashboard has buttons that communicate with the library. When users click "Browse Music Library", it scrolls to the library section.</p>
+
+        <h3>3.2 Individual Player Pages</h3>
+        <div class="file-list">
+            <strong>Create separate pages for each tier:</strong>
+            <ul>
+                <li>📄 /player-tier1 → webflow-embed-tier1.html</li>
+                <li>📄 /player-tier2 → webflow-embed-tier2.html</li>
+                <li>📄 /player-tier3 → webflow-embed-tier3.html</li>
+                <li>📄 /player-tier4 → webflow-embed-tier4.html</li>
+            </ul>
+        </div>
+
+        <h3>3.3 Alternative: Dynamic Player Page</h3>
+        <p>Create one page with all 4 players embedded, then use Memberstack conditional visibility to show only the user's tier player.</p>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">4</div>
+        <h2>Component Communication & Data Flow</h2>
+        
+        <div class="communication-flow">
+            <h4>🔄 How Components Work Together</h4>
+            <p>The components use <code>window.postMessage()</code> for internal communication and pull all data directly from your Neon database:</p>
+            
+            <ul>
+                <li><strong>Dashboard → Library:</strong> "Browse Music Library" button scrolls to library section</li>
+                <li><strong>Dashboard → Player:</strong> "Open My Player" communicates with parent page for navigation</li>
+                <li><strong>Library → Dashboard:</strong> When songs are saved, dashboard refreshes automatically</li>
+                <li><strong>All Components → Database:</strong> Every song, playlist, and user data comes directly from Neon DB</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <strong>✅ Pure Database-Driven:</strong> No hardcoded data or fallback content. Everything pulls from your Neon database in real-time.
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">5</div>
+        <h2>Database-Only Operation</h2>
+        
+        <div class="warning">
+            <strong>📋 Important - No Fallback Data:</strong>
+            <ul>
+                <li>⚠️ Components will show empty states if database is unavailable</li>
+                <li>⚠️ No hardcoded songs or playlists - everything comes from Neon DB</li>
+                <li>⚠️ Ensure your backend API is always accessible from Webflow domain</li>
+                <li>⚠️ Navigation relies on parent page or component communication only</li>
+            </ul>
+        </div>
+
+        <h3>5.1 Required Database Setup:</h3>
+        <div class="code-block">-- Ensure these tables exist in your Neon database:
+
+CREATE TABLE songs (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    artist VARCHAR(255) NOT NULL, 
+    streaming_url TEXT NOT NULL,
+    download_url TEXT,
+    artwork_url TEXT,
+    wav_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_playlists (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    song_id INTEGER REFERENCES songs(id),
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, song_id)
+);</div>
+
+        <h3>5.2 Data Population:</h3>
+        <p>Add songs to your database using the API endpoint or direct SQL:</p>
+        <div class="code-block">-- Example: Add a song to your database
+INSERT INTO songs (title, artist, streaming_url, download_url, artwork_url, wav_url)
+VALUES (
+    'Song Title',
+    'Artist Name',
+    'https://your-cdn.com/song.wav',
+    'https://your-cdn.com/song.mp3', 
+    'https://your-cdn.com/artwork.jpg',
+    'https://your-cdn.com/song.wav'
+);</div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">6</div>
+        <h2>Copy-Paste Instructions</h2>
+
+        <h3>6.1 For User Dashboard:</h3>
+        <p>1. Open <code>webflow-embed-dashboard.html</code></p>
+        <p>2. Select ALL content (Ctrl+A)</p>
+        <p>3. Copy (Ctrl+C)</p>
+        <p>4. In Webflow, add HTML Embed element</p>
+        <p>5. Paste all content</p>
+        <p>6. Save & Close</p>
+
+        <h3>6.2 For Music Library:</h3>
+        <p>Same process with <code>webflow-embed-library.html</code></p>
+
+        <h3>6.3 For Each Player:</h3>
+        <p>Same process with each <code>webflow-embed-tier[X].html</code> file</p>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">7</div>
+        <h2>Memberstack Integration</h2>
+        
+        <div class="warning">
+            <strong>📋 Prerequisites:</strong>
+            <ul>
+                <li>✅ Memberstack is installed on your Webflow site</li>
+                <li>✅ Users can login/signup</li>
+                <li>✅ Subscription plans are configured with these IDs:</li>
+            </ul>
+        </div>
+
+        <div class="code-block">Plan ID Mapping (already configured in your embeds):
+'pln_tier-1-cq5u0dlz': Tier 1 - Electric Blue
+'pln_tier-2-hn4j0op9': Tier 2 - Neon Seduction  
+'pln_tier-3-kx5v0dyk': Tier 3 - Neon Oracle
+'pln_tier-4-neon-muse-hg1he0sox': Tier 4 - Neon Muse</div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">8</div>
+        <h2>Testing Your Integration</h2>
+        
+        <h3>8.1 Local Testing First:</h3>
+        <p>Before embedding in Webflow, test locally:</p>
+        <div class="code-block">npm start
+# Visit: http://localhost:3000/webflow-embed-dashboard.html
+# Visit: http://localhost:3000/webflow-embed-library.html</div>
+
+        <h3>8.2 Webflow Testing:</h3>
+        <ol>
+            <li><strong>Preview Mode:</strong> Components work in Webflow preview</li>
+            <li><strong>Published Site:</strong> Full functionality on published site</li>
+            <li><strong>User Login:</strong> Test with actual Memberstack user accounts</li>
+            <li><strong>Tier Testing:</strong> Test with different subscription tiers</li>
+        </ol>
+
+        <div class="warning">
+            <strong>⚠️ Testing with Empty Database:</strong> If your database has no songs, components will show empty states with guidance messages.
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">9</div>
+        <h2>Styling & Customization</h2>
+        
+        <p>Each embed has scoped CSS that won't conflict with your Webflow styles:</p>
+        
+        <ul>
+            <li><strong>Dashboard:</strong> All styles prefixed with <code>#user-dashboard-embed</code></li>
+            <li><strong>Library:</strong> All styles prefixed with <code>#music-library-embed</code></li>
+            <li><strong>Players:</strong> All styles contained within component containers</li>
+        </ul>
+
+        <div class="success">
+            <strong>✅ No Conflicts:</strong> Embedded components won't interfere with your existing Webflow styles.
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">10</div>
+        <h2>Deployment Checklist</h2>
+        
+        <div class="file-list">
+            <strong>Before going live:</strong>
+            <ul>
+                <li>✅ All embed files copied to Webflow</li>
+                <li>✅ Backend API deployed to Azure and accessible</li>
+                <li>✅ Database tables created (user_playlists, songs)</li>
+                <li>✅ Songs added to database (no fallback content exists)</li>
+                <li>✅ Memberstack configured with correct Plan IDs</li>
+                <li>✅ CORS configured on backend for your Webflow domain</li>
+                <li>✅ Test user accounts created for each tier</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">11</div>
+        <h2>Troubleshooting</h2>
+        
+        <h3>Common Issues:</h3>
+        
+        <h4>🔸 Empty components showing:</h4>
+        <p><strong>Solution:</strong> Check if songs exist in your database and API is accessible</p>
+
+        <h4>🔸 "Memberstack not loaded" error:</h4>
+        <p><strong>Solution:</strong> Ensure Memberstack script loads BEFORE your embed components</p>
+
+        <h4>🔸 API calls failing:</h4>
+        <p><strong>Solution:</strong> Check CORS settings and verify Azure backend is running</p>
+
+        <h4>🔸 Tier detection not working:</h4>
+        <p><strong>Solution:</strong> Verify Plan IDs match your Memberstack dashboard</p>
+
+        <h4>🔸 Navigation not working:</h4>
+        <p><strong>Solution:</strong> Ensure components are properly embedded and parent page handles navigation messages</p>
+    </div>
+
+    <div class="step-section">
+        <div class="step-number">✅</div>
+        <h2>Database-Only Music Platform Ready!</h2>
+        
+        <p>Your pure database-driven music platform is ready for Webflow integration. Each component is:</p>
+        
+        <ul>
+            <li>🎯 <strong>Database-Only</strong> - No hardcoded data, everything from Neon DB</li>
+            <li>🔄 <strong>Real-Time</strong> - Components show live data from your database</li>
+            <li>📱 <strong>Responsive</strong> - Works on all device sizes</li>
+            <li>🎨 <strong>Styled</strong> - Beautiful tier-specific theming</li>
+            <li>🔒 <strong>Secure</strong> - Proper authentication and tier enforcement</li>
+        </ul>
+
+        <div class="success">
+            <strong>🚀 Pure Database Integration:</strong> Components will show empty states if database is empty, and populate automatically as you add songs. No fallback content or hardcoded data exists.
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Remember:</strong> Make sure to add songs to your database before users visit the components, otherwise they'll see empty states with guidance messages.
+        </div>
+    </div>
+</body>
+</html>
